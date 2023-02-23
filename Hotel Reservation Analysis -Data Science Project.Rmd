@@ -1,0 +1,449 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+
+## Final Project
+
+### Rules of Engagement: 
+
+This is an **honor system assignment**: You may consult your professor, your lab instructor, the textbook, and material on the Internet at any time. You may not consult, collaborate, or seek assistance from any other human besides your professor and lab instructor. Your attribution statement, at the top of your R-code file, should reflect these constraints.
+
+```{r}
+# Enter your name here: Nehal Taya
+```
+
+### Attribution statement: (choose only one and delete the rest)
+
+```{r}
+
+# 2. I did this homework with help from the book and the professor and these Internet sources: Google Search
+
+```
+
+
+
+```{r}
+#Question 1
+dataFile <- "https://intro-datascience.s3.us-east-2.amazonaws.com/Resort01.csv" #Storing the CSV file in a variable dataFile
+
+remove.packages(rlang)
+
+install.packages("rlang")
+install.packages("tidyverse") #Installs Tidyverse package
+
+library(tidyverse) #Loads tidyverse library
+
+bookings <- read_csv(dataFile) #Using read_csv() function to read dataFile and storing it in the dataframe bookings
+
+summary(bookings) #Returns descriptive statistics of all the variables in the dataframe bookings
+
+#We can see the minimum,1st Quartile, Median ,Mean ,3rd quartile and maximum of each variable in the dataframe
+
+#IsCanceled        LeadTime      StaysInWeekendNights StaysInWeekNights
+ #Min.   :0.0000   Min.   :  0.00   Min.   : 0.00        Min.   : 0.000   
+ #1st Qu.:0.0000   1st Qu.: 10.00   1st Qu.: 0.00        1st Qu.: 1.000   
+ #Median :0.0000   Median : 57.00   Median : 1.00        Median : 3.000   
+# Mean   :0.2776   Mean   : 92.68   Mean   : 1.19        Mean   : 3.129   
+# 3rd Qu.:1.0000   3rd Qu.:155.00   3rd Qu.: 2.00        3rd Qu.: 5.000   
+ #Max.   :1.0000   Max.   :737.00   Max.   :19.00        Max.   :50.000   
+  
+#   Adults          Children           Babies           Meal          
+# Min.   : 0.000   Min.   : 0.0000   Min.   :0.0000   Length:40060      
+ #1st Qu.: 2.000   1st Qu.: 0.0000   1st Qu.:0.0000   Class :character  
+ #Median : 2.000   Median : 0.0000   Median :0.0000   Mode  :character  
+ #Mean   : 1.867   Mean   : 0.1287   Mean   :0.0139                     
+ #3rd Qu.: 2.000   3rd Qu.: 0.0000   3rd Qu.:0.0000                     
+ #Max.   :55.000   Max.   :10.0000   Max.   :2.0000     
+
+  # Country          MarketSegment      IsRepeatedGuest   PreviousCancellations
+# Length:40060       Length:40060       Min.   :0.00000   Min.   : 0.0000      
+ #Class :character   Class :character   1st Qu.:0.00000   1st Qu.: 0.0000      
+ #Mode  :character   Mode  :character   Median :0.00000   Median : 0.0000      
+                                       #Mean   :0.04438   Mean   : 0.1017      
+                                       #3rd Qu.:0.00000   3rd Qu.: 0.0000      
+                                      # Max.   :1.00000   Max.   :26.0000   
+
+ #PreviousBookingsNotCanceled ReservedRoomType   AssignedRoomType   BookingChanges  
+ #Min.   : 0.0000             Length:40060       Length:40060       Min.   : 0.000  
+ #1st Qu.: 0.0000             Class :character   Class :character   1st Qu.: 0.000  
+ #Median : 0.0000             Mode  :character   Mode  :character   Median : 0.000  
+ #Mean   : 0.1465                                                   Mean   : 0.288  
+ #3rd Qu.: 0.0000                                                   3rd Qu.: 0.000  
+ #Max.   :30.0000                                                   Max.   :17.000  
+
+ #DepositType        CustomerType       RequiredCarParkingSpaces TotalOfSpecialRequests
+ #Length:40060       Length:40060       Min.   :0.0000           Min.   :0.0000        
+# Class :character   Class :character   1st Qu.:0.0000           1st Qu.:0.0000        
+# Mode  :character   Mode  :character   Median :0.0000           Median :0.0000        
+                                       #Mean   :0.1381           Mean   :0.6198        
+                                       #3rd Qu.:0.0000           3rd Qu.:1.0000        
+                                       #Max.   :8.0000           Max.   :5.0000        
+
+
+#There are 40060 observations in the dataframe and 20 variables 
+
+
+```
+
+```{r}
+
+#Question 2
+
+str(bookings) #Using str function to identify internal structure of the dataframe bookings
+
+#The numerical variables in the dataframe are :
+ #$ IsCanceled                 : num [1:40060] 0 0 0 0 0 0 0 0 1 1 ...
+ #$ LeadTime                   : num [1:40060] 342 737 7 13 14 14 0 9 85 75 ...
+ #$ StaysInWeekendNights       : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+ #$ StaysInWeekNights          : num [1:40060] 0 0 1 1 2 2 2 2 3 3 ...
+ #$ Adults                     : num [1:40060] 2 2 1 1 2 2 2 2 2 2 ...
+ #$ Children                   : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+ #$ Babies                     : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+#$ IsRepeatedGuest            : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+# $ PreviousCancellations      : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+ #$ PreviousBookingsNotCanceled: num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+#$ BookingChanges             : num [1:40060] 3 4 0 0 0 0 0 0 0 0 ...
+#$ RequiredCarParkingSpaces   : num [1:40060] 0 0 0 0 0 0 0 0 0 0 ...
+ #$ TotalOfSpecialRequests     : num [1:40060] 0 0 0 0 1 1 0 1 1 0 ...
+
+#install.packages("imputeTS") #Installs imputeTS package
+
+library(imputeTS) #Loads imputeTS library
+
+#Using is.na() function to check missing values in all the numerical variables present in the dataframe bookings.We can see that there are no missing values in the numerical variables
+
+sum(is.na(bookings$LeadTime))
+sum(is.na(bookings$StaysInWeekendNights ))
+sum(is.na(bookings$StaysInWeekNights ))
+sum(is.na(bookings$Adults))
+sum(is.na(bookings$Children))
+sum(is.na(bookings$ Babies))
+sum(is.na(bookings$PreviousCancellations ))
+sum(is.na(bookings$PreviousBookingsNotCanceled))
+sum(is.na(bookings$BookingChanges))
+sum(is.na(bookings$RequiredCarParkingSpaces))
+sum(is.na(bookings$TotalOfSpecialRequests))
+
+#Method 2 to check missing values
+bookings$LeadTime[is.na(bookings$LeadTime)]
+bookings$StaysInWeekendNights[is.na(bookings$StaysInWeekendNights)]
+bookings$StaysInWeekNights[is.na(bookings$StaysInWeekNights)]
+bookings$Adults[is.na(bookings$Adults)]
+bookings$Children[is.na(bookings$Children)]
+bookings$Babies[is.na(bookings$Babies)]
+bookings$PreviousCancellations[is.na(bookings$PreviousCancellations)]
+bookings$PreviousBookingsNotCanceled[is.na(bookings$PreviousBookingsNotCanceled)]
+bookings$BookingChanges[is.na(bookings$BookingChanges)]
+bookings$RequiredCarParkingSpaces[is.na(bookings$RequiredCarParkingSpaces)]
+
+```
+
+```{r}
+#Question3
+
+table(bookings$Meal) #Table function uses the cross-classifying factors to build a contingency table of the counts at each combination of factor levels .Since the Meal  column has only four levels ie. Undefined/SC	– no	meal	package;	BB	– Bed	&	Breakfast;		HB	– Half	board	(breakfast	and	one	other	meal	– usually	dinner);		FB	– Full	board	(breakfast,	lunch	and	dinner)	 , it displays the count of each type of meals booked by customers  in the bookings  dataframe.
+
+#There are 30005 bookings for Bed & Breakfast ;754 bookings for Full Board meal;8046 bookings for meal type Half Board ;86 bookings with no meal package ie. SC and 1169 bookings with no meal package ie.undefined
+
+table(bookings$IsRepeatedGuest) #There were 1778 bookings where the booking name was  from repeated guest and 38282 bookings where the booking name was not from a repeated guest
+
+table(bookings$DepositType) 
+
+#No	Deposit	– no	deposit	was	made such type of booking count is 38199
+#Non	Refund	– a	deposit	was	made	in	the	value	of	the	total	stay	cost and the count of these type of bookings is 1719
+#Refundable	– a	deposit	was	made	with	a	value	under	the	total	cost	of	stay and the count of these type of bookings is 142
+
+```
+
+
+```{r}
+#Question 4
+
+#install.packages("ggplot2") #Installs ggplot2 package which is required for data visualization
+library(ggplot2) #Loads ggplot2 library
+
+myPlot<- ggplot(bookings)+aes(x=IsCanceled, y=LeadTime,group=IsCanceled)+geom_boxplot()+ggtitle("Box Plot of Lead Time V/S Booking Cancellation") #Generates boxplot for Bookings dataframe where whether booking was cancelled or not categorical variable is on the X axis and Lead Time is on the Y Axis
+
+myPlot #Displays the boxplot
+
+#The Boxplot shows that the median lead time when booking was cancelled is higher than the median lead time in cases when booking was not cancelled .
+
+#We can also see that there are more outliers in LeadTime when booking was not cancelled
+
+#It can also be interpreted that the min,max.,25th percentile and 75% percentile ,IQR of LeadTime is more when bookings were cancelled as compared to LeadTime of cases when bookings were not cancelled 
+
+myPlot1<- ggplot(bookings)+aes(x=IsCanceled, y=,	StaysInWeekNights,group=IsCanceled)+geom_boxplot()+ggtitle("Box Plot of Stays in Week Nights V/S Booking Cancellation") #Generates boxplot for Bookings dataframe where whether booking was cancelled or not categorical variable is on the X axis and Stays in Week Nights is on the Y Axis
+
+myPlot1 #We can see that the median value of stays in week nights is more when bookings got cancelled as compared to when bookings were not cancelled
+
+#The IQR is more for stays in Week Nights when bookings were not cancelled
+
+#The maximum value of stays in week nights is more when bookings did not get cancelled as opposed to when bookings got cancelled 
+
+myPlot2<- ggplot(bookings)+aes(x=IsCanceled, y=,	PreviousCancellations,group=IsCanceled)+geom_boxplot()+ggtitle("Box Plot of Previous Cancellations V/S Booking Cancellation") #Generates boxplot for Bookings dataframe where whether booking was cancelled or not categorical variable is on the X axis and 	Number	of	previous	bookings	that	were	cancelled	by	the	customer	prior	to	the	current	booking	is on the Y Axis
+
+myPlot2 #The Boxplot shows that the median number of previous bookings that were cancelled by the customer prior to the current booking is same for both categories ie. whether the current booking was cancelled or not .Thus,we can say that the number of previous bookings cancelled by cusotmer does not affect whether he will cancel current booking or not
+
+#Also there are more outliers in the data of Previous cancellations when the current booking got cancelled
+```
+
+```{r}
+#Question 5
+
+#TotalOfSpecialRequests
+
+#BookingChanges
+
+#RequiredCardParkingSpaces
+
+#IsCanceled
+
+ggplot(bookings, aes(x = TotalOfSpecialRequests)) + geom_histogram(fill = "white", colour = "black") +facet_grid(IsCanceled ~ .) #Using ggplot function to create histogram on bookings dataframe for the variable TotalofSpecialRequests.We can see that , the number of special requests made by customers is more when reservations were not cancelled while the number of special requests made by customers were less when reservations were cancelled
+
+ggplot(bookings, aes(x = BookingChanges)) + geom_histogram(fill = "white", colour = "black") +facet_grid(IsCanceled ~ .) #We can see from the histogram that the number	of	changes/amendments	made	to	the	booking	from	the	moment	the	booking	was	entered	on	the	PMS	until	the	moment	of	check-in	or	cancellation	is more when reservations are not cancelled compared to when reservations are cancelled 
+
+ggplot(bookings, aes(x = RequiredCarParkingSpaces )) + geom_histogram(fill = "white", colour = "black") +facet_grid(IsCanceled ~ .) #We can see that the number	of	car	parking	spaces	required	by	the	customers is more when reservations are not cancelled as compared to when reservations are cancelled
+
+```
+
+```{r}
+#Question 6
+
+bookings$BookingCount <- bookings$StaysInWeekendNights+bookings$StaysInWeekNights # Summing StaysInWeekendNights:the number	of	weekend	nights	(Saturday	or	Sunday)	the	guest	stayed	or	booked	to	stay	at	the	hotel	and  StaysInWeekNights which is 	number	of	week	nights	(Monday	to	Friday)	the	guest	stayed	or	booked	to	stay	at	the	hotel	and storing the total number of weekdays and weekend bookings in a variable BookingCount
+
+tail(bookings) #We can see that a new variable BookingCount is created in the dataframe bookings which contains sum of number of weekdays and weekend bookings
+
+#install.packages("dplyr")
+library(dplyr)
+library(tidyverse)
+
+CountryBooking <-aggregate(bookings$BookingCount, by=list(Country=bookings$Country), FUN=sum) #Using aggregate function to get the sum of booking count by country 
+
+CountryBooking$TotalBookings <- CountryBooking$x #Creating a new variable TotalBookings in the dataframe CountryBooking and storing the total number of bookings for each country in that variable 
+head(CountryBooking) #We can see that CountryBooking dataframe contains three columns .The first variable Country lists name of each country and the second and third variable x and TotalBookings contain the total number of bookings for that country
+CountryBooking[which.max(CountryBooking$TotalBookings),]#Using subsetting and  which.max function to get the row which with maximum value of Total Bookings and all the columns of that row
+
+#We can see that the country with largest number of bookings is PRT which stands for Portugal and the total number of bookings is 63665
+```
+
+```{r}
+#Question 7
+
+country <-aggregate(bookings$IsCanceled, by=list(Country=bookings$Country), FUN=sum) #Using aggregate function to get the sum of cancellations by country name
+
+head(country) #Displays first six rows of the dataframe country
+
+country$name <- country$Country #Creating a new column;name  in the dataframe country which contains name of each country
+
+country$numCanceled <-country$x #Creating a new column;numCanceled  in the dataframe country which contains number of Cancellations done in each country
+
+head(country) #Displays first six rows of the dataframe country with two new columns name and numCanceled
+
+country[which.max(country$numCanceled),]#Using subsetting and  which.max function to get the row which with maximum value of cancellations and all the columns of that row
+
+#We can see that the country with largest number of cancellations  is PRT which stands for Portugal and the total number of cancellations is 7438
+```
+
+```{r}
+#Question 8
+
+#install.packages("rworldmap") #Installs rworldmap package which helps in mapping global data
+library(rworldmap) #Loads rworldmap library
+
+sPDF <-joinCountryData2Map(country, joinCode="ISO3", nameJoinColumn="name") #Using joinCountryData2Map function which joins user data referenced by country codes or names to an internal map ready for plotting using mapCountryData.In our case the user data is country dataframe .We are storing the output in the variable sPDF
+
+map<-mapCountryData(sPDF, nameColumnToPlot='numCanceled',catMethod="logFixedWidth") #Using mapCountryData function to draw a map of country-level data, allowing countries to be coloured, from sPDF created in joinCountryData2Map
+
+#The argument nameColumnToPlot contains name of column containing the data we want to plot which in our case is numCanceled
+
+#It can be seen that countires in bright yellow have lowest total number of cancellations and portion of the map in red have highest total number of cancellations
+
+#If we see the map carefully ,it can be seen that India,China ,Argentina have lowest total number of cancellations
+
+#Also we can see that Spain,Portugal ,France,Belgium ,Netherlands are few countries with highest total number of cancellations
+```
+
+```{r}
+
+#Question 9
+
+#Creating a mini version of our original data bookings  with select variables only and converting	the columns Meal,MarketSegment,IsRepeatedGuest,AssignedRoomType,CustomerType,BookingChanges which are greater than 0 and IsCanceled	into	factor variables	
+
+#Creating a new dataframe bookCat which contains only factor variables
+
+bookCat <- data.frame(meal=as.factor(bookings$Meal), 
+ marketSegment=as.factor(bookings$MarketSegment), 
+ isRepeatedGuest=as.factor(bookings$IsRepeatedGuest), 
+ assignedRoom=as.factor(bookings$AssignedRoomType), 
+ customerType=as.factor(bookings$CustomerType),
+ bookingChanges=as.factor(bookings$BookingChanges>0),
+ canceled=as.factor(bookings$IsCanceled)) 
+
+#install.packages(c("arules","arulesViz")) #Installing arules and arulesViz package 
+library("arules","arulesViz") #Loads arules and arulesViz library
+
+bookCatX <- as(bookCat,"transactions")
+
+itemFrequency(bookCatX) #It returns the frequency/support for all single items for eg. frequency of transactions where meal=BB is 7.490015e-01
+
+itemFrequencyPlot(bookCatX) # It shows the relative frequency of occurrence of different items in the bookCatX matrix and returns a plot which displays frequency  in form of a bar
+
+#We can see that frequency of IsRepeatedGuest =0 is highest which means that the frequency of booking names from non-repeated guests is the highest
+
+#We can also interpret that the frequency of bookings that were not cancelled is more than that of the bookings that were cancelled 
+
+#The frequency of meal type BB (Bed	&	Breakfast) is highest compared to other meal types
+
+inspect(bookCatX[1:10]) #Returns first 10 observations of the bookCatX transaction matrix .
+#Eg the first transaction has following values of different attributes.Similarly every transaction has different values for the attributes meal,marketSegment,isRepeatedGuest,assignedRoom,customerType,bookingChanges etc.
+#{meal=BB,                                    marketSegment=Direct,                     isRepeatedGuest=0,                         assignedRoom=C,                            customerType=Transient,                    bookingChanges=TRUE,                       canceled=0}                              1 
+
+# We can see that when meal=FB,                                                         marketSegment=Groups,   the customer is not repeated                                                                  assignedRoom=A,                                                                            customerType=Transient then the booking is more likely to get cancelled 
+```
+
+
+```{r}
+#Question 10
+
+#Using apriori() to generate a set of rules with, e.g. support over 0.005 and confidence over 0.97, and trying to predict transactions where the stay in hotel or reservation was cancelled
+
+rules <- apriori(bookCatX,
+                  parameter=list(supp=0.005, conf=0.97),
+                  control=list(verbose=F),
+                  appearance=list(default="lhs",rhs=("canceled=1"))) 
+
+
+
+rules #Set of 8 rules are generated 
+
+inspect(rules) #Using inspect function to review the ruleset .
+
+#We can see that rule 2 has a very high level of confidence which is 0.9894366. This measure defines the likeliness of occurrence of cancellation of booking  given that the meal type is FB 	FB	– Full	board	(breakfast,	lunch	and	dinner)		,market segment is groups, assignedRoom is A and customer type is transient
+
+#Rule 5 also has very high level of confidence which is 0.9894366 and it means that the likeliness of occurence of cancellation of booking is very high when the meal type is Full Board,assigned room type is A ,customer type is transient and there are  no changes in booking 
+
+#The support value of rule 2 is 0.007014478 which  gives an idea of how frequent an itemset is in all the transactions .In our case it means the ratio of all transactions when meal =FB ,marketSegment is Groups,assignedRoom =A , customer type is transient and booking got canceled out of total transactions is 0.007014478
+
+#The support value of rule 5 is 0.007014478 which  gives an idea of how frequent an itemset is in all the transactions .In our case it means the ratio of all transactions when meal =FB ,marketSegment is Groups,assignedRoom =A , customer type is transient,there were no changes in booking  and booking got canceled out of total transactions is 0.007014478
+
+#Lift is the rise in probability of having {Y} which means booking cancellation  on the cart with the knowledge of {X}, LHS  being present over the probability of having {Y} on the cart without any knowledge about presence of {X}.In rule 2 and 5 ,the lift is 3.563822 which is high compared to other rules and thus , we can say that 
+
+#meal=FB,                            
+#marketSegment=Groups,                                                                    #assignedRoom=A,                                                                           #customerType=Transient
+#bookingChanges=FALSE play an important role in booking cancellation
+
+```
+
+```{r}
+#Question 11
+
+#install.packages(c("kernlab","caret")) #Installing kernlab and caret package
+library(kernlab) #Loads kernlab library
+library(caret) #Loads caret library
+
+#We will use bookings dataset to train an SVM model to predict cancellations  based on a total of 8 other variables (features).SVM needs numerical predictors (known in machine learning as features) to make a prediction.
+
+#Therefore, let's create a subset of bookings called book  which contains only the variable we are trying to predict and the numerical variables in the data
+
+book <- data.frame(leadTime=bookings$LeadTime, 
+ staysWeekend=bookings$StaysInWeekendNights, 
+ staysWeek=bookings$StaysInWeekNights,
+ adults=bookings$Adults, 
+ children=bookings$Children, 
+ babies=bookings$Babies, 
+ prevCancellations=bookings$PreviousCancellations,
+ specialRequests=bookings$TotalOfSpecialRequests,
+ canceled=as.factor(bookings$IsCanceled))
+
+#Let's take a look at this new dataframe, book:
+head(book) #We can see that all the variables except canceled - the one we are trying to predict - contain numbers
+
+#Creating  train-test split, i.e. splitting  our book data into a train set and a test set by randomly selecting 70 percent of the indices from book and using them to subset from it to create a train set, while using the remaining 30 percent for the test set
+
+trainList <- createDataPartition(y=book$canceled, p=.70, list=FALSE)
+trainSet <- book[trainList,]
+testSet <- book[-trainList,]
+```
+
+
+
+```{r}
+
+#Question 12
+
+#Training an SVM model by fitting it to the train set and letting it learn from its data
+
+ksvm(canceled ~ ., data=trainSet, kernel= "rbfdot", kpar = "automatic", 
+     C = 5, cross = 3, prob.model = TRUE)
+
+#Storing the model in a variable called svmOut
+
+svmOut <- ksvm(canceled ~ ., data=trainSet, kernel= "rbfdot", kpar = "automatic", 
+               C = 5, cross = 3, prob.model = TRUE)
+
+svmOut
+
+svmPred <- predict(svmOut, # use the built model "svmOutput" to predict 
+                   testSet, # use testData to generate predictions
+                   type = "response" # request "votes" from the prediction process
+) #Using predict function on test set to make predictions and storing the output in the variable svmPred
+
+head(svmPred) #For each observation in the test set, the model made a prediction - reservation was canceled or not , and saved its prediction in svmPred.
+
+#To see how well it performed, we use the so-called confusion matrix which compares the answers the model gave against the actual answers we have in the test set
+
+confm<-table(testSet$canceled,svmPred) #Creating a confusion matrix using the table function and storing the result in the variable confm
+
+confusionMatrix(testSet$canceled, svmPred) #Creating confusion matrix 
+
+diag(confm) #Returns the diagonal elements of the confusion matrix
+
+sum(confm) #Returns the total of all four cells of the confusion matrix
+
+accuracy <- sum(diag(confm))/sum(confm) #Dividing the sum of the diagonal elements of the confusion matrix which contains the total number of values the model predicted correctly and dividing it by the sum of the total number of observations that we are trying to predict .It will give us the percentage of values our model predicted correctly .Storing the output in the variable accuracy
+
+accuracy #Displays the accuracy percentage of our model which is 76.4%
+
+```
+
+
+```{r}
+#Building Tree Model
+
+library(rpart)
+treeModel <- rpart(canceled ~ ., data = trainSet, method = "class")
+
+install.packages('rpart.plot')
+library(rpart.plot)
+rpart.plot(treeModel)
+
+prediction <- treeModel %>% predict(testSet, type="class")
+
+confusionMatrix(testSet$canceled, prediction) #It can be seen that the accuracy of tree model is 75.29% while accuracy of SVM model was 76.4% and hence it can be concluded that SVM Model is better 
+
+```
+
+```{r}
+#Question 13
+
+#Suggestions to the CEO 
+
+#1.Since ,Spain,Portugal ,France,Belgium ,Netherlands are few countries with highest total number of cancellations so the CEO should make friendly reservation policies  to reduce total number of cancellations in these European countries
+
+#2. The CEO should focus less on customers who select  meal=FB(Full Board),                belong to marketSegment=Groups,                                                          are assignedRoom type A,                                                                      customerType is Transient
+#bookingChanges=FALSE  as they do more number of cancellations and should focus more on guests who fall outside this category as they do less number of cancellations
+
+#3.We can see that the country with largest number of bookings is PRT which stands for Portugal and the total number of bookings is 63665 so the CEO should dedicate more resources for expansion of hotel bookings in Portugal
+
+#4.BB	– Bed	&	Breakfast is the most preferred type of breakfast when guests make booking so the CEO should focus on improvising this breakfast service
+
+#5.We also saw the type of payment method preferred by guests and No Deposit is the most preferred mode of payment while refundable is least preferred method of payment so the CEO should give offers in order to make refundable type of payment more attractive to guests
+#No	Deposit	– no	deposit	was	made such type of booking count is 38199
+#Non	Refund	– a	deposit	was	made	in	the	value	of	the	total	stay	cost and the count of these type of bookings is 1719
+#Refundable	– a	deposit	was	made	with	a	value	under	the	total	cost	of	stay and the count of these type of bookings is 142
+
+
+
+```
