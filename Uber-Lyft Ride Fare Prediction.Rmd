@@ -1,0 +1,176 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+# Midterm Exam Part 2: Hands-on Coding Assignment (12 points; 14 questions)
+
+## Instructions
+
+Type in your SUID in place of the zeros below and run the cell (click Ctrl + Enter):
+
+
+```{r}
+suid <- 325500391
+```
+
+The block of code below creates a custom data set for you to analyze. Your dataset is different from every other student's dataset. The goal of this part of the exam is to write code and comments that address the research questions described below. The quality of your comments is critical to your success on this exam! You will only be submitting this file and there are several important results that require an explanation in plain language. Pay close attention to the research questions described below when writing your code and comments.
+
+**Do not modify any of the code, just run it as is:**
+
+```{r}
+if (suid == 0) {cat("Please update your SUID (above) before running this code.")} else {cat(paste("Lyft/Uber Fare Comparison Study Number:",suid,"\n")); set.seed(suid); grp1id <- paste("Lyft",substr(as.hexmode(suid),1,2),sep="_"); grp2id <- paste("Uber",substr(as.hexmode(suid),1,2),sep="_"); ssize <- floor(runif(n=1,min=100,max=140)); driver <- 1:ssize; base <-round(rnorm(n=ssize,mean=25,sd=5), digits=2);lyft <- round(rowMeans(cbind(base, runif(ssize,min=15,max=35))),digits=2);if ((suid %% 2)==1) {uber <- round(rowMeans(cbind(base, runif(ssize,min=10,max=40))),digits=2) } else { uber <- round(rowMeans(cbind( base + rexp(n=ssize,rate=0.25), rnorm(n=ssize,mean=25,sd=5))),digits=2)}; testDF <- data.frame(driver,lyft,uber);cat(paste("Sample size for this study:",ssize)); t1 <- testDF[,3] + 0.25*rnorm(n=ssize, (mean(testDF[,3])),sd=5);t <-testDF[,2] + 1.1*rnorm(n=ssize,mean(testDF[,2]),sd=20); t[ t < 0] <- 0;t1[ t1 < 0] <- 0;testDF <- data.frame(driver,lyft,uber, t, t1);if ((suid %% 2)==1) {states <- c("New York", "Texas", "Texas", "Florida")}else {states <- c("California", "California","Texas", "Georgia") }; testDF$tmp1 <- sample(states, nrow(testDF), replace=TRUE); testDF$tmp2 <- testDF$tmp1;rm(states);names(testDF)[2]<-grp1id; names(testDF)[3]<-grp2id;names(testDF)[5]<-paste0(grp2id, "_distance");names(testDF)[4]<-paste0(grp1id, "_distance");names(testDF)[7]<-paste0(grp2id, "_state");names(testDF)[6]<-paste0(grp1id, "_state"); rm(base); rm(lyft); rm(uber); rm(ssize); rm(grp1id); rm(grp2id); rm(driver); rm(t); rm(t1)}
+```
+## Your Assignment: rYdZ Analysis
+The code you just ran generates a unique dataframe called **testDF**. 
+
+You can explore it by running, e.g. head(testDF). 
+
+There is an upstart in the ride-sharing market: The new start-up firm **rYdZ** (pronounced rides) is driver-owned and operated. In addition to providing safe rides at competitive prices, the?mission of **rYdZ** is to provide a working wage to **rYdZ** drivers. But the leadership team at **rYdZ** believes there is a problem: the two giants in the industry, **Lyft** and **Uber**, are coordinating to set prices for rides that are artificially low? The team at **rYdZ** has produced a data set of more than 100 fares offered to drivers from **Lyft** and **Uber**. Your job is to analyze this data set and infer whether there is some sort of coordination between **Lyft** and **Uber** to set prices, as well as understand if either is pricing based on miles driven, or perhaps, based on geography.
+
+## Data Set Description: 
+Your data set contains variables for the **ride number**, the **fare** (in dollars and cents) of a ride offered to a driver from Lyft, and the **distance** of that ride (in miles). There are at least 100 observations (rows) in your dataset, and possibly more. Each observation was done at roughly the same time for Uber and Lyft (the data for the ride in a row was collected at roughly the same time).
+
+## Research Questions (tasks to do):
+
+
+1.	Output the 5th Lift fare (0.5 pts)
+```{r}
+testDF[5,2] #Using subsetting to return the output of the 5th row and 2nd column which contains 5th Lift fare.Here 5 is the row number and 2 is the column number
+```
+
+2.	Describe the fares provided by Lyft and Uber (separately) using descriptive statistics that you calculate in R (1 pts):
+```{r}
+summary(testDF) #Using summary function to get the descriptive statistics of the entire dataframe.
+
+#We can see that the mean fare charged by Lyft is 24 dollars and 54 cents .The maximum fare charged by Lyft is 33.45 and minimum fare charged is 13.39
+
+#We can see that the mean fare charged by Uber  is 24 dollars and 85 cents .The maximum fare charged by Uber  is 46.59 and minimum fare charged is 18.39
+
+#Overall Uber fares are higher than Lyft fares
+```
+
+3. Describe the shape of the distribution for Lyft fares. Do the same for Uber fares (1 pt)
+```{r}
+hist(testDF$Lyft_13) #Using hist function to get histogram of Lyft fares and we can see that the distribution is close to normal distribution
+hist(testDF$Uber_13)#Using hist function to get histogram of Uber fares and we can see that distribution is close to normal distribution
+```
+
+4.	Based on the fares offered by both companies, on average, which company is more expensive, Lyft or Uber? By how much? (0.5 pts)
+```{r}
+#Mean of Lyft  fares is 24.54  while  Mean of Uber fares is 24.85 so on an average Uber is more expensive by 31 cents
+```
+
+5.	Create a new attribute, called 'diff' in testDF, that represents the difference in fares between Uber and Lyft for each observation - in other words, the difference for each row(0.5 pts):
+```{r}
+testDF$diff <- testDF$Uber_13-testDF$Lyft_13 #Creating a new attribute diff in testDF which is the difference in fares between Uber and Lyft for each observation
+
+head(testDF) #We can see that new variable diff gets added to our dataset DF
+
+```
+
+6. Describe the shape of the distribution for this new variable(0.5 pts)
+```{r}
+hist(testDF$diff) #We can see that diff variable follows the shape close to normal distribution
+```
+
+7. Sort testDF, based on the new attribute (*diff*), and store the sorted dataframe in 'sortedDF'. Show the first and last row in the sortedDF dataframe (1 pt)
+```{r}
+sortedDF <- testDF[order(testDF$diff, decreasing = FALSE), ]  #Using subsetting and order function to sort the diff variable in the dataframe testDF in ascending order and storing the output in the variable sortedDF
+
+head(sortedDF,1) #Using head function to display first  row of the sorted dataframe
+tail(sortedDF,1) #Using tail function to display last row of the sorted dataframe
+```
+
+8.	Create an X-Y scatterplot of the Lyft and Uber fares using the sortedDF dataframe (make sure to provide informative labels for each axis).  Does the scatterplot show an obvious pattern/relationship? (1 pt total)
+```{r}
+x <- sortedDF$Lyft_13 #Storing Lyft fares in a variable x
+y <- sortedDF$Uber_13 #Storing Uber fares in the variable y
+# Plot with main and axis titles
+
+plot(x, y, main = "Scatterplot of Uber and Lyft Fares",
+     xlab = "Lyft Fares", ylab = "Uber Fares") #Creating a scatterplot of Lyft and Uber Fares with Lyft fares on the X-axis ,Uber Fares on the Y axis and giving titles and subtitles to the scatterplot
+
+#The scatterplot does not show an obvious pattern or relationship
+```
+
+9.	Generate a linear model trying to predict Lyft fares based on the distance of the trip. Interpret the coefficients of the statistically significant predictors in the model (1 pt).
+```{r}
+#install.packages("MASS") #Installing Mass package
+library(MASS) #Loading MASS library
+
+lmOut <- lm(Lyft_13 ~ Lyft_13_distance, data= sortedDF) #Using lm function to create a linear model where Lyft fares is the dependent variable and distance of the trip is the independent variable.These variables are coming from the sortedDF dataframe
+summary(lmOut) #Generates summary of the linear model
+
+#We can see that that the p value of both the intercept and distance is less than 0.05 so both are statistically significant.
+
+#We can also say that with increase in distance by 1 mile , the fare goes up by 0.03350 dollars
+
+```
+
+10. Generate a similar model for the Uber trips. Interpret the coefficients of the statistically significant predictors in the model (0.5 pts)
+```{r}
+lmOut1 <- lm(Uber_13 ~ Uber_13_distance, data= sortedDF) #Using lm function to create a linear model where Uber fare is the dependent variable and distance of the trip is the independent variable.These variables are coming from the sortedDF dataframe
+summary(lmOut1) #Generates summary of the linear model
+
+#We can see that that the p value of both the intercept and distance is less than 0.05 so both are statistically significant.
+
+#We can also say that with increase in distance by 1 mile , the fare goes up by 0.96827 dollars
+```
+
+11.	Which model is better? Please explain your answer (0.5 pts)
+```{r}
+#Multiple R-squared of Lyft model is   0.03393 while that of Uber model is 0.9446 .Also p value of the overall equation of lmout is higher than p value of the F-statistic of lmout1 so lmout1 is a better model. We can also say that 94.46% of the change in Uber Fare is explained by change in distance , while only 3% of the change in Lyft fares is explained by the change in distance so lmout1 is a far better model
+```
+
+12.	What would be your model's prediction of the Lyft fare for a 2.39 mile trip? (1 pt).
+```{r}
+predDF <- data.frame(Lyft_13_distance = 2.39) #Creating prediction for distance =2.39 miles and storing it in predDF
+predict(lmOut, predDF) #Using predict command on our model lmout , we can see that the fare prediction for distance of 2.39 miles is 23.00 Dollars
+```
+
+13.	Generate a map where each state is shaded according to the average fare for Uber. Make sure even states with no data are visible on your map (2 pts)
+```{r}
+#install.packages("ggmap") #Installs ggmap package
+library(ggmap) #Loads ggmap library
+
+#install.packages("maps") #Installs maps package
+#install.packages("mapproj") #Installs mapproj package
+
+library(maps) #Loads maps library
+library(mapproj) #Loads mapproj library
+
+df <- sortedDF%>% group_by(Uber_13_state)
+df <- df %>% summarise(
+  avgfare = mean(Uber_13) 
+) # Calculating average Uber fare in each state using group_by and summarise function
+
+head(df)
+
+df$Uber_13_state <- tolower(df$Uber_13_state) #Converting state names to lower case using tolower function and overwriting Uber_13_state column
+head(df)
+
+us <- map_data("state") #Loading US state map and storing it in us
+head(us)
+
+map2 <- ggplot(df, aes(map_id=Uber_13_state))
+map2 #Using ggplot to get states in df on the map
+
+
+map2 <- map2 + geom_map(map=us, aes(fill=avgfare))
+map2 #Using fill in the map as per the average fare
+
+map2 <- map2 + expand_limits(x=us$long, y=us$lat)
+map2
+
+map2 <- map2 + coord_map() + ggtitle("US State Wise Average Uber Fare")
+map2
+
+#We can see from the map that average Uber fare is highest in New York,then Texas and then Florida
+
+```
+
+14.	Include a comment indicating whether or not you think Lyft and Uber fares are related based only on your data analysis. If the distributions of Lyft fares and Uber fares look similar and the distribution of the differences variable is normal and the X-Y scatterplot shows a clear pattern or relationship, then they may be related, i.e. they may be coordinating prices (1 pt).
+```{r}
+#Based on the scatterplot we saw ,it can be deduced that there was no relationship or significant pattern that was seen between Uber and Lyft Fares and hence they are not corrdinating prices.Also the distribution of the difference in Uber and Lyft fares follows close to a normal distribution 
+```
