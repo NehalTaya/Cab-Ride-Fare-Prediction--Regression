@@ -154,6 +154,9 @@ map2
 
 #We can see from the map that average Uber fare is highest in New York,then Texas and then Florida
 
+![image](https://user-images.githubusercontent.com/100436462/221278246-fe638892-d5e6-4a55-90dd-53885bbffe46.png)
+
+
 
 
 # CONCLUSION
